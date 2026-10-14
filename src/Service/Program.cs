@@ -47,6 +47,13 @@ app.MapPost("/circuits/{id}/status", (string id, StatusChange change) => {
     return Results.Ok(updated);
 });
 
+// Deliberately insecure. Present only on demo/vulnerable so scanners have something to report.
+app.MapGet("/circuits/search", (string? name) => {
+    var query = "SELECT * FROM circuits WHERE name = '" + name + "'";
+    var hash = Convert.ToHexString(System.Security.Cryptography.MD5.HashData(System.Text.Encoding.UTF8.GetBytes(name ?? "demo")));
+    return Results.Ok(new { query, hash });
+});
+
 app.Run();
 
 public sealed record Circuit(string CircuitId, string ASite, string ZSite, string Provider, int BandwidthMbps, string Status);
