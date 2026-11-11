@@ -43,16 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: meta
-        run: |
-          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
-            version="${GITHUB_REF#refs/tags/}"
-          else
-            ref="${GITHUB_REF_NAME//\//-}"
-            version="v0.0.0-${ref}.$(git rev-parse --short HEAD)"
-          fi
-          image="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/circuit-service:${version}"
-          echo "version=${version}" >> "$GITHUB_OUTPUT"
-          echo "image=${image}" >> "$GITHUB_OUTPUT"
+        run: bash scripts/image-meta.sh
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
